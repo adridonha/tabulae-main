@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/* Variables de color para el fondo y el texto principal */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* Variables de tema para fuentes y colores */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Desactivar dark mode para que el texto siempre sea visible */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Asegura que el texto gris siempre sea visible */
+.text-gray-800, .text-gray-900 {
+  color: #1a202c !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #1a202c !important;
+}
+
+p, span, div, td, th {
+  color: #1a202c !important;
+}
+
+/* Excepción para elementos con colores específicos */
+.text-red-500, .text-red-600, .text-red-700, 
+.text-blue-500, .text-blue-600, .text-blue-700,
+.text-green-500, .text-green-600, .text-green-700,
+.text-purple-500, .text-purple-600, .text-purple-700,
+.text-yellow-500, .text-yellow-600, .text-yellow-700 {
+  color: currentColor !important;
+}
+
+/* Colores específicos para acciones */
+.text-red-500 {
+  color: #f56565 !important;
+}
+
+.text-red-600 {
+  color: #e53e3e !important;
+}
+
+.text-red-700 {
+  color: #c53030 !important;
+}
+
+.text-blue-500 {
+  color: #4299e1 !important;
+}
+
+.text-blue-600 {
+  color: #3182ce !important;
+}
+
+.text-blue-700 {
+  color: #2b6cb0 !important;
+}
+
+.text-green-500 {
+  color: #48bb78 !important;
+}
+
+.text-green-600 {
+  color: #38a169 !important;
+}
+
+.text-green-700 {
+  color: #2f855a !important;
+}
+
+.text-white {
+  color: white !important;
+}
+
+/* Asegura que los botones y enlaces sean visibles */
+button, a {
+  color: inherit !important;
+}
