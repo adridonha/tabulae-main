@@ -347,50 +347,85 @@ export default function FacturaDetalle({ params }) {
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-lg font-semibold mb-4 text-gray-900">Líneas de Factura</h2>
         {factura.lineas && factura.lineas.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                    Producto
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                    Cantidad
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                    Precio
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                    IVA
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {factura.lineas.map((linea, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {linea.producto?.nombre || 'Producto'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {linea.cantidad || 0}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {linea.precio != null ? Number(linea.precio).toFixed(2) : '0.00'} €
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {linea.impuesto || 0}%
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {linea.total != null ? Number(linea.total).toFixed(2) : '0.00'} €
-                    </td>
+          <>
+            {/* Vista de tabla para pantallas grandes */}
+            <div className="hidden lg:block overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                      Producto
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                      Cantidad
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                      Precio
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                      IVA
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                      Total
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {factura.lineas.map((linea, index) => (
+                    <tr key={index}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {linea.producto?.nombre || 'Producto'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {linea.cantidad || 0}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {linea.precio != null ? Number(linea.precio).toFixed(2) : '0.00'} €
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {linea.impuesto || 0}%
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {linea.total != null ? Number(linea.total).toFixed(2) : '0.00'} €
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Vista de tarjetas para pantallas pequeñas y medianas */}
+            <div className="lg:hidden space-y-3">
+              {factura.lineas.map((linea, index) => (
+                <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                  <h4 className="font-medium text-gray-900 mb-3">{linea.producto?.nombre || 'Producto'}</h4>
+                  
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <span className="text-gray-600">Cantidad:</span>
+                      <p className="font-medium text-gray-900">{linea.cantidad || 0}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Precio:</span>
+                      <p className="font-medium text-gray-900">
+                        {linea.precio != null ? Number(linea.precio).toFixed(2) : '0.00'} €
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">IVA:</span>
+                      <p className="font-medium text-gray-900">{linea.impuesto || 0}%</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Total:</span>
+                      <p className="font-semibold text-green-600">
+                        {linea.total != null ? Number(linea.total).toFixed(2) : '0.00'} €
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         ) : (
           <p className="text-gray-900">No hay líneas en la factura</p>
         )}

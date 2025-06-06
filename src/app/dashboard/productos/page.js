@@ -100,11 +100,11 @@ export default function ProductosPage() {
   // Render principal de la página de productos
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Productos</h1>
         <Link
           href="/dashboard/productos/nuevo"
-          className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-center"
         >
           Nuevo Producto
         </Link>
@@ -116,86 +116,156 @@ export default function ProductosPage() {
           <p className="text-gray-900">No hay productos disponibles</p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          {/* Tabla de productos */}
-          <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-md">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Nombre
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Código
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Descripción
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Precio base (€)
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Precio con IVA (€)
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  IVA (%)
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {productos.map((producto) => {
-                // Calculo el precio con IVA para mostrarlo en la tabla
-                const precioConIVA = producto.precio != null && producto.impuesto != null
-                  ? Number(producto.precio) * (1 + Number(producto.impuesto) / 100)
-                  : 0
-                return (
-                <tr key={producto._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{producto.nombre}</div>
-                  </td>
+        <>
+          {/* Vista de tabla para pantallas grandes */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="min-w-full bg-white rounded-lg overflow-hidden shadow-md">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Nombre
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Código
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Descripción
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Precio base (€)
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Precio con IVA (€)
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    IVA (%)
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {productos.map((producto) => {
+                  // Calculo el precio con IVA para mostrarlo en la tabla
+                  const precioConIVA = producto.precio != null && producto.impuesto != null
+                    ? Number(producto.precio) * (1 + Number(producto.impuesto) / 100)
+                    : 0
+                  return (
+                  <tr key={producto._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{producto.codigo || '-'}</div>
+                      <div className="text-sm font-medium text-gray-900">{producto.nombre}</div>
                     </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{producto.descripcion || '-'}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {producto.precio != null ? Number(producto.precio).toFixed(2) : '0.00'} €
-                    </div>
-                  </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{producto.codigo || '-'}</div>
+                      </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-900">{producto.descripcion || '-'}</div>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
-                        {precioConIVA.toFixed(2)} €
+                        {producto.precio != null ? Number(producto.precio).toFixed(2) : '0.00'} €
                       </div>
                     </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{producto.impuesto || 0}%</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {precioConIVA.toFixed(2)} €
+                        </div>
+                      </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{producto.impuesto || 0}%</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        <Link
+                          href={`/dashboard/productos/${producto._id}/editar`}
+                          className="text-blue-700 hover:text-blue-900 font-medium"
+                        >
+                          Editar
+                        </Link>
+                        <button
+                          onClick={() => confirmDelete(producto._id)}
+                          className="text-red-600 hover:text-red-900 font-medium"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Vista de tarjetas para pantallas pequeñas y medianas */}
+          <div className="lg:hidden space-y-4">
+            {productos.map((producto) => {
+              // Calculo el precio con IVA para mostrarlo en la tarjeta
+              const precioConIVA = producto.precio != null && producto.impuesto != null
+                ? Number(producto.precio) * (1 + Number(producto.impuesto) / 100)
+                : 0
+              return (
+                <div key={producto._id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="text-lg font-semibold text-gray-900">{producto.nombre}</h3>
                     <div className="flex space-x-2">
                       <Link
                         href={`/dashboard/productos/${producto._id}/editar`}
-                        className="text-blue-700 hover:text-blue-900 font-medium"
+                        className="text-blue-700 hover:text-blue-900 font-medium text-sm"
                       >
                         Editar
                       </Link>
                       <button
                         onClick={() => confirmDelete(producto._id)}
-                        className="text-red-600 hover:text-red-900 font-medium"
+                        className="text-red-600 hover:text-red-900 font-medium text-sm"
                       >
                         Eliminar
                       </button>
                     </div>
-                  </td>
-                </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {producto.codigo && (
+                      <div className="flex justify-between">
+                        <span className="text-sm font-medium text-gray-600">Código:</span>
+                        <span className="text-sm text-gray-900">{producto.codigo}</span>
+                      </div>
+                    )}
+                    
+                    {producto.descripcion && (
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Descripción:</span>
+                        <p className="text-sm text-gray-900 mt-1">{producto.descripcion}</p>
+                      </div>
+                    )}
+                    
+                    <div className="grid grid-cols-2 gap-4 pt-2">
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Precio base:</span>
+                        <p className="text-sm font-semibold text-gray-900">
+                          {producto.precio != null ? Number(producto.precio).toFixed(2) : '0.00'} €
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <span className="text-sm font-medium text-gray-600">Precio con IVA:</span>
+                        <p className="text-sm font-semibold text-green-600">
+                          {precioConIVA.toFixed(2)} €
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-between pt-2 border-t border-gray-100">
+                      <span className="text-sm font-medium text-gray-600">IVA:</span>
+                      <span className="text-sm font-semibold text-gray-900">{producto.impuesto || 0}%</span>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </>
       )}
 
       {/* Modal de confirmación para eliminar un producto */}

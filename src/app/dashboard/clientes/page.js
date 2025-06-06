@@ -96,11 +96,11 @@ export default function ClientesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Clientes</h1>
         <Link
           href="/dashboard/clientes/nuevo"
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-center"
         >
           Nuevo Cliente
         </Link>
@@ -112,63 +112,120 @@ export default function ClientesPage() {
           <p className="text-gray-900">No hay clientes disponibles</p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white rounded-lg overflow-hidden">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Nombre
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  NIF
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Teléfono
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {clientes.map((cliente) => (
-                <tr key={cliente._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{cliente.nombre}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{cliente.nif}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{cliente.email}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{cliente.telefono}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      <Link
-                        href={`/dashboard/clientes/${cliente._id}/editar`}
-                        className="text-indigo-600 hover:text-indigo-900 font-medium"
-                      >
-                        Editar
-                      </Link>
-                      <button
-                        onClick={() => confirmDelete(cliente._id)}
-                        className="text-red-600 hover:text-red-900 font-medium"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </td>
+        <>
+          {/* Vista de tabla para pantallas grandes */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="min-w-full bg-white rounded-lg overflow-hidden">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Nombre
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    NIF
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Teléfono
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Acciones
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {clientes.map((cliente) => (
+                  <tr key={cliente._id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{cliente.nombre}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{cliente.nif}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{cliente.email}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{cliente.telefono}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        <Link
+                          href={`/dashboard/clientes/${cliente._id}/editar`}
+                          className="text-indigo-600 hover:text-indigo-900 font-medium"
+                        >
+                          Editar
+                        </Link>
+                        <button
+                          onClick={() => confirmDelete(cliente._id)}
+                          className="text-red-600 hover:text-red-900 font-medium"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Vista de tarjetas para pantallas pequeñas y medianas */}
+          <div className="lg:hidden space-y-4">
+            {clientes.map((cliente) => (
+              <div key={cliente._id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                <div className="flex justify-between items-start mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900">{cliente.nombre}</h3>
+                  <div className="flex space-x-2">
+                    <Link
+                      href={`/dashboard/clientes/${cliente._id}/editar`}
+                      className="text-indigo-600 hover:text-indigo-900 font-medium text-sm"
+                    >
+                      Editar
+                    </Link>
+                    <button
+                      onClick={() => confirmDelete(cliente._id)}
+                      className="text-red-600 hover:text-red-900 font-medium text-sm"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium text-gray-600">NIF:</span>
+                    <span className="text-sm text-gray-900">{cliente.nif}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium text-gray-600">Email:</span>
+                    <span className="text-sm text-gray-900 break-all">{cliente.email}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium text-gray-600">Teléfono:</span>
+                    <span className="text-sm text-gray-900">{cliente.telefono}</span>
+                  </div>
+                  
+                  {cliente.direccion && (
+                    <div className="pt-2 border-t border-gray-100">
+                      <span className="text-sm font-medium text-gray-600">Dirección:</span>
+                      <p className="text-sm text-gray-900 mt-1">{cliente.direccion}</p>
+                      {(cliente.codigoPostal || cliente.localidad || cliente.provincia) && (
+                        <p className="text-sm text-gray-700 mt-1">
+                          {[cliente.codigoPostal, cliente.localidad, cliente.provincia].filter(Boolean).join(', ')}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Modal de confirmación para eliminar */}

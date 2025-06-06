@@ -390,47 +390,94 @@ export default function NuevaFactura() {
 
           {/* Tabla de líneas de factura */}
           {formData.lineas.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-left text-gray-900 font-medium">Producto</th>
-                    <th className="px-4 py-2 text-left text-gray-900 font-medium">Cantidad</th>
-                    <th className="px-4 py-2 text-left text-gray-900 font-medium">Precio (€)</th>
-                    <th className="px-4 py-2 text-left text-gray-900 font-medium">IVA (%)</th>
-                    <th className="px-4 py-2 text-left text-gray-900 font-medium">Total (€)</th>
-                    <th className="px-4 py-2 text-left text-gray-900 font-medium">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {formData.lineas.map((linea, index) => {
-                    const producto = productos.find(p => p._id === linea.producto)
-                    const subtotal = linea.cantidad * linea.precio
-                    const impuesto = subtotal * (linea.impuesto / 100)
-                    const total = subtotal + impuesto
-                    
-                    return (
-                      <tr key={index} className="border-t">
-                        <td className="px-4 py-2">{producto ? producto.nombre : 'Producto'}</td>
-                        <td className="px-4 py-2">{linea.cantidad}</td>
-                        <td className="px-4 py-2">{linea.precio.toFixed(2)} €</td>
-                        <td className="px-4 py-2">{linea.impuesto}%</td>
-                        <td className="px-4 py-2">{total.toFixed(2)} €</td>
-                        <td className="px-4 py-2">
-                          <button
-                            type="button"
-                            onClick={() => removeLinea(index)}
-                            className="text-red-500 hover:text-red-700"
-                          >
-                            Eliminar
-                          </button>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <>
+              {/* Vista de tabla para pantallas grandes */}
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2 text-left text-gray-900 font-medium">Producto</th>
+                      <th className="px-4 py-2 text-left text-gray-900 font-medium">Cantidad</th>
+                      <th className="px-4 py-2 text-left text-gray-900 font-medium">Precio (€)</th>
+                      <th className="px-4 py-2 text-left text-gray-900 font-medium">IVA (%)</th>
+                      <th className="px-4 py-2 text-left text-gray-900 font-medium">Total (€)</th>
+                      <th className="px-4 py-2 text-left text-gray-900 font-medium">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {formData.lineas.map((linea, index) => {
+                      const producto = productos.find(p => p._id === linea.producto)
+                      const subtotal = linea.cantidad * linea.precio
+                      const impuesto = subtotal * (linea.impuesto / 100)
+                      const total = subtotal + impuesto
+                      
+                      return (
+                        <tr key={index} className="border-t">
+                          <td className="px-4 py-2">{producto ? producto.nombre : 'Producto'}</td>
+                          <td className="px-4 py-2">{linea.cantidad}</td>
+                          <td className="px-4 py-2">{linea.precio.toFixed(2)} €</td>
+                          <td className="px-4 py-2">{linea.impuesto}%</td>
+                          <td className="px-4 py-2">{total.toFixed(2)} €</td>
+                          <td className="px-4 py-2">
+                            <button
+                              type="button"
+                              onClick={() => removeLinea(index)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              Eliminar
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Vista de tarjetas para pantallas pequeñas y medianas */}
+              <div className="lg:hidden space-y-3">
+                {formData.lineas.map((linea, index) => {
+                  const producto = productos.find(p => p._id === linea.producto)
+                  const subtotal = linea.cantidad * linea.precio
+                  const impuesto = subtotal * (linea.impuesto / 100)
+                  const total = subtotal + impuesto
+                  
+                  return (
+                    <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <div className="flex justify-between items-start mb-3">
+                        <h4 className="font-medium text-gray-900">{producto ? producto.nombre : 'Producto'}</h4>
+                        <button
+                          type="button"
+                          onClick={() => removeLinea(index)}
+                          className="text-red-500 hover:text-red-700 text-sm font-medium"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-gray-600">Cantidad:</span>
+                          <p className="font-medium text-gray-900">{linea.cantidad}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-600">Precio:</span>
+                          <p className="font-medium text-gray-900">{linea.precio.toFixed(2)} €</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-600">IVA:</span>
+                          <p className="font-medium text-gray-900">{linea.impuesto}%</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-600">Total:</span>
+                          <p className="font-semibold text-green-600">{total.toFixed(2)} €</p>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
           ) : (
             <p className="text-gray-900 italic">No hay líneas en la factura</p>
           )}

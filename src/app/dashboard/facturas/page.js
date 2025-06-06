@@ -120,45 +120,45 @@ export default function FacturasPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Facturas</h1>
         <Link
           href="/dashboard/facturas/nueva"
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-center"
         >
           Nueva Factura
         </Link>
       </div>
 
       {/* Filtros por estado */}
-      <div className="flex space-x-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         <Link
           href="/dashboard/facturas"
-          className={`px-3 py-1 rounded font-medium ${!estadoFilter ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
+          className={`px-3 py-1 rounded font-medium text-sm ${!estadoFilter ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
         >
           Todas
         </Link>
         <Link
           href="/dashboard/facturas?estado=borrador"
-          className={`px-3 py-1 rounded font-medium ${estadoFilter === 'borrador' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
+          className={`px-3 py-1 rounded font-medium text-sm ${estadoFilter === 'borrador' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
         >
           Borradores
         </Link>
         <Link
           href="/dashboard/facturas?estado=emitida"
-          className={`px-3 py-1 rounded font-medium ${estadoFilter === 'emitida' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
+          className={`px-3 py-1 rounded font-medium text-sm ${estadoFilter === 'emitida' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
         >
           Emitidas
         </Link>
         <Link
           href="/dashboard/facturas?estado=pagada"
-          className={`px-3 py-1 rounded font-medium ${estadoFilter === 'pagada' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
+          className={`px-3 py-1 rounded font-medium text-sm ${estadoFilter === 'pagada' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
         >
           Pagadas
         </Link>
         <Link
           href="/dashboard/facturas?estado=cancelada"
-          className={`px-3 py-1 rounded font-medium ${estadoFilter === 'cancelada' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
+          className={`px-3 py-1 rounded font-medium text-sm ${estadoFilter === 'cancelada' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-900'}`}
         >
           Canceladas
         </Link>
@@ -170,85 +170,146 @@ export default function FacturasPage() {
           <p className="text-gray-900">No hay facturas disponibles</p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white rounded-lg overflow-hidden">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Número
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Cliente
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Fecha
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Total
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Estado
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {facturas.map((factura) => (
-                <tr key={factura._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{factura.numero}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {factura.cliente?.nombre || 'Cliente desconocido'}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {new Date(factura.fecha).toLocaleDateString()}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {factura.total != null ? `${Number(factura.total).toFixed(2)} €` : '0,00 €'}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {getEstadoBadge(factura.estado)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      <Link
-                        href={`/dashboard/facturas/${factura._id}`}
-                        className="text-blue-600 hover:text-blue-900 font-medium"
-                      >
-                        Ver
-                      </Link>
-                      {factura.estado === 'borrador' && (
-                        <>
-                          <Link
-                            href={`/dashboard/facturas/${factura._id}/editar`}
-                            className="text-indigo-600 hover:text-indigo-900 font-medium"
-                          >
-                            Editar
-                          </Link>
-                          <button
-                            onClick={() => confirmDelete(factura._id)}
-                            className="text-red-600 hover:text-red-900 font-medium"
-                          >
-                            Eliminar
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </td>
+        <>
+          {/* Vista de tabla para pantallas grandes */}
+          <div className="hidden lg:block overflow-x-auto">
+            <table className="min-w-full bg-white rounded-lg overflow-hidden">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Número
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Cliente
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Fecha
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Total
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Estado
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                    Acciones
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {facturas.map((factura) => (
+                  <tr key={factura._id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{factura.numero}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {factura.cliente?.nombre || 'Cliente desconocido'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {new Date(factura.fecha).toLocaleDateString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {factura.total != null ? `${Number(factura.total).toFixed(2)} €` : '0,00 €'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getEstadoBadge(factura.estado)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex space-x-2">
+                        <Link
+                          href={`/dashboard/facturas/${factura._id}`}
+                          className="text-blue-600 hover:text-blue-900 font-medium"
+                        >
+                          Ver
+                        </Link>
+                        {factura.estado === 'borrador' && (
+                          <>
+                            <Link
+                              href={`/dashboard/facturas/${factura._id}/editar`}
+                              className="text-indigo-600 hover:text-indigo-900 font-medium"
+                            >
+                              Editar
+                            </Link>
+                            <button
+                              onClick={() => confirmDelete(factura._id)}
+                              className="text-red-600 hover:text-red-900 font-medium"
+                            >
+                              Eliminar
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Vista de tarjetas para pantallas pequeñas y medianas */}
+          <div className="lg:hidden space-y-4">
+            {facturas.map((factura) => (
+              <div key={factura._id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">{factura.numero}</h3>
+                    <p className="text-sm text-gray-600">{factura.cliente?.nombre || 'Cliente desconocido'}</p>
+                  </div>
+                  <div className="text-right">
+                    {getEstadoBadge(factura.estado)}
+                  </div>
+                </div>
+                
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium text-gray-600">Fecha:</span>
+                    <span className="text-sm text-gray-900">
+                      {new Date(factura.fecha).toLocaleDateString()}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium text-gray-600">Total:</span>
+                    <span className="text-sm font-semibold text-green-600">
+                      {factura.total != null ? `${Number(factura.total).toFixed(2)} €` : '0,00 €'}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+                  <Link
+                    href={`/dashboard/facturas/${factura._id}`}
+                    className="text-blue-600 hover:text-blue-900 font-medium text-sm"
+                  >
+                    Ver
+                  </Link>
+                  {factura.estado === 'borrador' && (
+                    <>
+                      <Link
+                        href={`/dashboard/facturas/${factura._id}/editar`}
+                        className="text-indigo-600 hover:text-indigo-900 font-medium text-sm"
+                      >
+                        Editar
+                      </Link>
+                      <button
+                        onClick={() => confirmDelete(factura._id)}
+                        className="text-red-600 hover:text-red-900 font-medium text-sm"
+                      >
+                        Eliminar
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Modal de confirmación para eliminar */}
