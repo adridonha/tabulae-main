@@ -66,8 +66,8 @@ export default function NuevoProducto() {
         [name]: value === '' ? 0 : parseFloat(value)
       }))
     } else {
-      setFormData(prev => ({
-        ...prev,
+    setFormData(prev => ({
+      ...prev,
         [name]: value
       }))
     }
@@ -192,7 +192,7 @@ export default function NuevoProducto() {
               <option value="conIVA">Precio con IVA incluido</option>
             </select>
           </div>
-          
+
           <div>
             <label className="block text-gray-900 font-medium mb-2" htmlFor="precio">
               {tipoPrecio === 'base' ? 'Precio sin IVA (€)' : 'Precio con IVA incluido (€)'}

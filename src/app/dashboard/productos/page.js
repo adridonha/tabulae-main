@@ -151,46 +151,46 @@ export default function ProductosPage() {
                   ? Number(producto.precio) * (1 + Number(producto.impuesto) / 100)
                   : 0
                 return (
-                  <tr key={producto._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{producto.nombre}</div>
-                    </td>
+                <tr key={producto._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">{producto.nombre}</div>
+                  </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{producto.codigo || '-'}</div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">{producto.descripcion || '-'}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {producto.precio != null ? Number(producto.precio).toFixed(2) : '0.00'} €
-                      </div>
-                    </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">{producto.descripcion || '-'}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {producto.precio != null ? Number(producto.precio).toFixed(2) : '0.00'} €
+                    </div>
+                  </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {precioConIVA.toFixed(2)} €
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{producto.impuesto || 0}%</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <Link
-                          href={`/dashboard/productos/${producto._id}/editar`}
-                          className="text-blue-700 hover:text-blue-900 font-medium"
-                        >
-                          Editar
-                        </Link>
-                        <button
-                          onClick={() => confirmDelete(producto._id)}
-                          className="text-red-600 hover:text-red-900 font-medium"
-                        >
-                          Eliminar
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{producto.impuesto || 0}%</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex space-x-2">
+                      <Link
+                        href={`/dashboard/productos/${producto._id}/editar`}
+                        className="text-blue-700 hover:text-blue-900 font-medium"
+                      >
+                        Editar
+                      </Link>
+                      <button
+                        onClick={() => confirmDelete(producto._id)}
+                        className="text-red-600 hover:text-red-900 font-medium"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
                 )
               })}
             </tbody>
