@@ -1,7 +1,6 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 import NextAuthProvider from '../providers/NextAuthProvider'
-import Footer from '../components/Footer'
 
 // Cargamos la fuente Inter desde Google Fonts
 const inter = Inter({ subsets: ['latin'] })
@@ -19,11 +18,9 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         {/* Proveedor de sesión para toda la app */}
         <NextAuthProvider>
-          {/* Contenedor principal con mínimo alto de pantalla y layout en columna */}
-          <div className="min-h-screen flex flex-col">
+          {/* Contenedor principal con mínimo alto de pantalla */}
+          <div className="min-h-screen">
             {children}
-            {/* Pie de página en todas las páginas */}
-            <Footer />
           </div>
         </NextAuthProvider>
       </body>

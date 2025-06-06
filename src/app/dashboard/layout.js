@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Sidebar from '@/components/Sidebar'
+import Footer from '@/components/Footer'
 
 // Layout principal del dashboard, protege la ruta y muestra navbar y sidebar
 export default function DashboardLayout({ children }) {
@@ -31,17 +32,22 @@ export default function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Navbar superior */}
       <Navbar />
-      <div className="flex flex-col md:flex-row">
-        {/* Sidebar lateral */}
+      
+      {/* Contenedor principal con sidebar y contenido */}
+      <div className="flex flex-1">
+        {/* Sidebar lateral que se extiende hasta el footer */}
         <Sidebar />
-        {/* Contenido principal del dashboard */}
+        
+        {/* Contenedor del contenido principal y footer */}
         <main id="main-content" className="flex-1 p-6 focus:outline-none" tabIndex="-1">
           {children}
         </main>
       </div>
+      
+      <Footer />
     </div>
   )
 } 

@@ -44,9 +44,9 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside 
         id="sidebar"
-        className={`bg-white shadow-md md:w-64 transition-all duration-300 ease-in-out fixed md:static inset-y-0 left-0 transform ${
+        className={`bg-white shadow-lg md:w-64 transition-all duration-300 ease-in-out fixed md:static inset-y-0 left-0 transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:translate-x-0 z-40 overflow-y-auto`}
+        } md:translate-x-0 z-40 overflow-y-auto border-r border-gray-200 h-full`}
         aria-label="Navegación lateral"
       >
         <div className="p-6">
@@ -63,10 +63,10 @@ export default function Sidebar() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className={`flex items-center px-4 py-3 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                      className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         isActive 
-                          ? 'bg-blue-100 text-blue-800 font-medium' 
-                          : 'text-gray-800 hover:bg-gray-100 hover:text-gray-900'
+                          ? 'bg-blue-50 text-blue-700 font-medium border-l-4 border-blue-700 shadow-sm' 
+                          : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 hover:shadow-sm'
                       }`}
                       aria-current={isActive ? 'page' : undefined}
                       onClick={() => setIsOpen(false)}
@@ -74,7 +74,7 @@ export default function Sidebar() {
                       {/* Icono del link */}
                       <svg 
                         xmlns="http://www.w3.org/2000/svg" 
-                        className={`h-5 w-5 mr-3 ${isActive ? 'text-blue-700' : 'text-gray-600'}`} 
+                        className={`h-5 w-5 mr-3 ${isActive ? 'text-blue-700' : 'text-gray-500'}`} 
                         fill="none" 
                         viewBox="0 0 24 24" 
                         stroke="currentColor"
