@@ -17,7 +17,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.3",
-    "next": "15.3.2",
+    "next": "15.3.8",
     "next-auth": "^4.24.11",
     "node-fetch": "^2.7.0",
     "pdf-lib": "^1.17.1",
