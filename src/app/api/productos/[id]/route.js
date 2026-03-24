@@ -64,19 +64,44 @@ export async function PUT(request, context) {
         { status: 404 }
       );
     }
-    
-    // Validar código/referencia si se proporciona
-    if (body.codigo && (typeof body.codigo !== 'string' || body.codigo.length > 50)) {
+
+    if (!body.nombre || typeof body.nombre !== 'string' || body.nombre.trim().length < 2) {
       return NextResponse.json(
-        { error: 'El código debe ser un texto de máximo 50 caracteres.' },
+        { error: 'El nombre es obligatorio y debe tener al menos 2 caracteres.' },
         { status: 400 }
       );
     }
-    
-    // Actualizamos el producto con los nuevos datos
+    const descripcionTrim =
+      typeof body.descripcion === 'string' ? body.descripcion.trim() : '';
+    if (descripcionTrim.length > 4000) {
+      return NextResponse.json(
+        { error: 'La descripción no puede superar los 4000 caracteres.' },
+        { status: 400 }
+      );
+    }
+    if (typeof body.precio !== 'number' || isNaN(body.precio) || body.precio < 0) {
+      return NextResponse.json(
+        { error: 'El precio debe ser un número mayor o igual a 0.' },
+        { status: 400 }
+      );
+    }
+    if (typeof body.impuesto !== 'number' || isNaN(body.impuesto) || body.impuesto < 0 || body.impuesto > 100) {
+      return NextResponse.json(
+        { error: 'El impuesto debe estar entre 0 y 100.' },
+        { status: 400 }
+      );
+    }
+
+    // No se actualiza `codigo`: se mantiene el generado al crear el producto.
     const productoActualizado = await Producto.findByIdAndUpdate(
       id,
-      { ...body, usuario: userId }, // Asegurar que usuario no cambia
+      {
+        nombre: body.nombre.trim(),
+        descripcion: descripcionTrim,
+        precio: body.precio,
+        impuesto: body.impuesto,
+        usuario: userId,
+      },
       { new: true }
     );
     

@@ -64,11 +64,44 @@ export async function PUT(request, context) {
         { status: 404 }
       );
     }
-    
+
+    const emailTrim =
+      typeof body.email === 'string' ? body.email.trim() : body.email;
+    if (
+      emailTrim &&
+      typeof emailTrim === 'string' &&
+      !/^\S+@\S+\.\S+$/.test(emailTrim)
+    ) {
+      return NextResponse.json(
+        { error: 'El email debe tener un formato válido.' },
+        { status: 400 }
+      );
+    }
+    const telefonoTrim =
+      typeof body.telefono === 'string' ? body.telefono.trim() : body.telefono;
+    if (
+      telefonoTrim &&
+      typeof telefonoTrim === 'string' &&
+      telefonoTrim.length < 6
+    ) {
+      return NextResponse.json(
+        { error: 'Si indica teléfono, debe tener al menos 6 caracteres.' },
+        { status: 400 }
+      );
+    }
+
+    const updatePayload = {
+      ...body,
+      usuario: userId,
+    };
+    if (typeof body.email === 'string') updatePayload.email = body.email.trim();
+    if (typeof body.telefono === 'string')
+      updatePayload.telefono = body.telefono.trim();
+
     // Actualizamos el cliente con los nuevos datos
     const clienteActualizado = await Cliente.findByIdAndUpdate(
       id,
-      { ...body, usuario: userId }, // Asegurar que usuario no cambia
+      updatePayload,
       { new: true }
     );
     

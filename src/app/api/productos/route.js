@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Producto from '@/models/Producto';
 import { requireAuth } from '@/lib/session';
+import { sugerirCodigoProducto } from '@/lib/sugerirCodigoProducto';
 
 // Manejador para obtener todos los productos del usuario
 export async function GET() {
@@ -53,9 +54,11 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    if (!body.descripcion || typeof body.descripcion !== 'string' || body.descripcion.trim().length < 5) {
+    const descripcionTrim =
+      typeof body.descripcion === 'string' ? body.descripcion.trim() : '';
+    if (descripcionTrim.length > 4000) {
       return NextResponse.json(
-        { error: 'La descripción es obligatoria y debe tener al menos 5 caracteres.' },
+        { error: 'La descripción no puede superar los 4000 caracteres.' },
         { status: 400 }
       );
     }
@@ -71,17 +74,16 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    // Validar código/referencia si se proporciona
-    if (body.codigo && (typeof body.codigo !== 'string' || body.codigo.length > 50)) {
-      return NextResponse.json(
-        { error: 'El código debe ser un texto de máximo 50 caracteres.' },
-        { status: 400 }
-      );
-    }
-    // Creamos el producto y lo asociamos al usuario
+    const nombreTrim = body.nombre.trim();
+    const codigoGenerado = sugerirCodigoProducto(nombreTrim, body.impuesto);
+
     const producto = await Producto.create({
-      ...body,
-      usuario: userId
+      nombre: nombreTrim,
+      descripcion: descripcionTrim,
+      precio: body.precio,
+      impuesto: body.impuesto,
+      codigo: codigoGenerado,
+      usuario: userId,
     });
     
     // Devolvemos el producto creado

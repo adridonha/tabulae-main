@@ -16,12 +16,11 @@ export default function NuevoProducto() {
     descripcion: '',
     precio: 0, // Este será siempre el precio base (sin IVA)
     impuesto: 21,  // IVA por defecto en España
-    codigo: ''
   })
   // Estado para el tipo de precio introducido: 'base' o 'conIVA'
   const [tipoPrecio, setTipoPrecio] = useState('base')
-  // Estado para el valor introducido por el usuario (puede ser base o con IVA)
-  const [precioInput, setPrecioInput] = useState(0)
+  // Texto libre para evitar un 0 inicial que al escribir "1" pase a "01"
+  const [precioInput, setPrecioInput] = useState('')
   // Estado para mostrar loading cuando envío el formulario
   const [submitting, setSubmitting] = useState(false)
   // Estado para mostrar errores
@@ -32,11 +31,12 @@ export default function NuevoProducto() {
     const iva = formData.impuesto
     let base = 0
     let conIVA = 0
+    const n = precioInput === '' ? 0 : parseFloat(String(precioInput).replace(',', '.')) || 0
     if (tipoPrecio === 'base') {
-      base = parseFloat(precioInput) || 0
+      base = n
       conIVA = base * (1 + iva / 100)
     } else {
-      conIVA = parseFloat(precioInput) || 0
+      conIVA = n
       base = conIVA / (1 + iva / 100)
     }
     return {
@@ -57,18 +57,18 @@ export default function NuevoProducto() {
   // Maneja los cambios en los inputs del formulario de producto
   const handleChange = (e) => {
     const { name, value } = e.target
-    
+
     if (name === 'precio') {
       setPrecioInput(value)
     } else if (name === 'impuesto') {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value === '' ? 0 : parseFloat(value)
+        [name]: value === '' ? 0 : parseFloat(value),
       }))
     } else {
-    setFormData(prev => ({
-      ...prev,
-        [name]: value
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
       }))
     }
   }
@@ -131,7 +131,14 @@ export default function NuevoProducto() {
       {/* Formulario para crear el producto */}
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
+          <div className="md:col-span-2 rounded-md border border-blue-100 bg-blue-50/80 px-4 py-3 text-sm text-gray-800">
+            <p className="font-medium text-gray-900">Código / referencia del producto</p>
+            <p className="mt-1">
+              Se asignará automáticamente al guardar el producto (nombre, IVA y sufijo único). No se puede elegir a mano.
+            </p>
+          </div>
+
+          <div className="md:col-span-2">
             <label className="block text-gray-900 font-medium mb-2" htmlFor="nombre">
               Nombre del Producto
             </label>
@@ -147,24 +154,9 @@ export default function NuevoProducto() {
             />
           </div>
 
-          <div>
-            <label className="block text-gray-900 font-medium mb-2" htmlFor="codigo">
-              Código/Referencia
-            </label>
-            <input
-              id="codigo"
-              name="codigo"
-              type="text"
-              value={formData.codigo}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-              placeholder="Código interno (opcional)"
-            />
-          </div>
-
           <div className="md:col-span-2">
             <label className="block text-gray-900 font-medium mb-2" htmlFor="descripcion">
-              Descripción
+              Descripción <span className="text-gray-500 font-normal">(opcional)</span>
             </label>
             <textarea
               id="descripcion"
@@ -173,7 +165,7 @@ export default function NuevoProducto() {
               onChange={handleChange}
               rows="3"
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-              placeholder="Descripción detallada del producto o servicio"
+              placeholder="Detalle adicional del producto o servicio"
             ></textarea>
           </div>
 
@@ -200,14 +192,13 @@ export default function NuevoProducto() {
             <input
               id="precio"
               name="precio"
-              type="number"
-              step="0.0001"
-              min="0"
+              type="text"
+              inputMode="decimal"
               value={precioInput}
               onChange={handleChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-              required
               placeholder="0.00"
+              autoComplete="off"
             />
           </div>
           

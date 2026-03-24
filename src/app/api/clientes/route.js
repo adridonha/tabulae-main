@@ -65,15 +65,17 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    if (!body.email || typeof body.email !== 'string' || !/^\S+@\S+\.\S+$/.test(body.email)) {
+    const emailTrim = typeof body.email === 'string' ? body.email.trim() : '';
+    if (emailTrim && !/^\S+@\S+\.\S+$/.test(emailTrim)) {
       return NextResponse.json(
-        { error: 'El email es obligatorio y debe tener un formato válido.' },
+        { error: 'El email debe tener un formato válido.' },
         { status: 400 }
       );
     }
-    if (!body.telefono || typeof body.telefono !== 'string' || body.telefono.trim().length < 6) {
+    const telefonoTrim = typeof body.telefono === 'string' ? body.telefono.trim() : '';
+    if (telefonoTrim && telefonoTrim.length < 6) {
       return NextResponse.json(
-        { error: 'El teléfono es obligatorio y debe tener al menos 6 caracteres.' },
+        { error: 'Si indica teléfono, debe tener al menos 6 caracteres.' },
         { status: 400 }
       );
     }
@@ -96,10 +98,24 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    // Creamos el cliente y lo asociamos al usuario
+    const codigoPostalTrim =
+      typeof body.codigoPostal === 'string' ? body.codigoPostal.trim() : '';
+    const localidadTrim =
+      typeof body.localidad === 'string' ? body.localidad.trim() : '';
+    const provinciaTrim =
+      typeof body.provincia === 'string' ? body.provincia.trim() : '';
+
+    // Creamos el cliente y lo asociamos al usuario (solo campos permitidos)
     const cliente = await Cliente.create({
-      ...body,
-      usuario: userId
+      nombre: body.nombre.trim(),
+      direccion: body.direccion.trim(),
+      nif: body.nif.trim(),
+      codigoPostal: codigoPostalTrim || undefined,
+      localidad: localidadTrim || undefined,
+      provincia: provinciaTrim || undefined,
+      email: emailTrim || undefined,
+      telefono: telefonoTrim || undefined,
+      usuario: userId,
     });
     // Devolvemos el cliente creado
     return NextResponse.json(cliente, { status: 201 });
@@ -111,7 +127,9 @@ export async function POST(request) {
         { status: 401 }
       );
     }
-    
+
+    console.error('POST /api/clientes:', error);
+
     // Otros errores
     return NextResponse.json(
       { error: 'Error al crear cliente: ' + error.message },

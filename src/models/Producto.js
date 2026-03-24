@@ -7,8 +7,8 @@ const ProductoSchema = new mongoose.Schema(
     // Nombre del producto - campo obligatorio de tipo texto
     nombre: { type: String, required: true },
     
-    // Descripción detallada del producto - campo obligatorio de tipo texto
-    descripcion: { type: String, required: true },
+    // Descripción detallada del producto (opcional)
+    descripcion: { type: String, default: '' },
     
     // Código o referencia del producto - campo opcional de tipo texto
     // Permite identificar el producto con un código personalizado
@@ -47,7 +47,8 @@ const ProductoSchema = new mongoose.Schema(
 // Esto es importante porque filtraremos productos por usuario frecuentemente
 ProductoSchema.index({ usuario: 1 });
 
-// Exportamos el modelo
-// Si ya existe un modelo llamado 'Producto', lo usamos
-// Si no existe, creamos uno nuevo con el esquema definido
+if (process.env.NODE_ENV === 'development' && mongoose.models.Producto) {
+  mongoose.deleteModel('Producto');
+}
+
 export default mongoose.models.Producto || mongoose.model('Producto', ProductoSchema); 

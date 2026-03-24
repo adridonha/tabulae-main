@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useCodigoPostalAutofill } from '@/hooks/useCodigoPostalAutofill'
 
 // Función para validar formato de email
 function isValidEmail(email) {
@@ -28,6 +29,8 @@ export default function NuevoCliente() {
   const [submitting, setSubmitting] = useState(false)
   // Estado para mostrar errores
   const [error, setError] = useState(null)
+
+  const cpLookupLoading = useCodigoPostalAutofill(formData.codigoPostal, setFormData)
 
   // Maneja los cambios en los inputs del formulario
   const handleChange = (e) => {
@@ -150,11 +153,18 @@ export default function NuevoCliente() {
               id="codigoPostal"
               name="codigoPostal"
               type="text"
+              inputMode="numeric"
+              maxLength={8}
               value={formData.codigoPostal}
               onChange={handleChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900"
-              placeholder="Código postal"
+              placeholder="Ej. 28013"
+              aria-busy={cpLookupLoading}
             />
+            <p className="text-xs text-gray-600 mt-1">
+              Con 5 dígitos se rellenan localidad y provincia automáticamente.
+              {cpLookupLoading ? ' Buscando…' : ''}
+            </p>
           </div>
 
           <div>
@@ -198,8 +208,7 @@ export default function NuevoCliente() {
               value={formData.email}
               onChange={handleChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900"
-              required
-              placeholder="correo@ejemplo.com"
+              placeholder="correo@ejemplo.com (opcional)"
             />
           </div>
 
@@ -214,8 +223,7 @@ export default function NuevoCliente() {
               value={formData.telefono}
               onChange={handleChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900"
-              required
-              placeholder="Número de teléfono"
+              placeholder="Número de teléfono (opcional)"
             />
           </div>
         </div>

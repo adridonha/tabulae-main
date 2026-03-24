@@ -26,7 +26,7 @@ export default function EditarProducto({ params }) {
   // Estado para el tipo de precio introducido: 'base' o 'conIVA'
   const [tipoPrecio, setTipoPrecio] = useState('base')
   // Estado para el valor introducido por el usuario (puede ser base o con IVA)
-  const [precioInput, setPrecioInput] = useState(0)
+  const [precioInput, setPrecioInput] = useState('')
   // Estado para mostrar loading cuando envío el formulario
   const [submitting, setSubmitting] = useState(false)
   // Estado para mostrar loading mientras cargo los datos
@@ -39,11 +39,12 @@ export default function EditarProducto({ params }) {
     const iva = formData.impuesto
     let base = 0
     let conIVA = 0
+    const n = precioInput === '' ? 0 : parseFloat(String(precioInput).replace(',', '.')) || 0
     if (tipoPrecio === 'base') {
-      base = parseFloat(precioInput) || 0
+      base = n
       conIVA = base * (1 + iva / 100)
     } else {
-      conIVA = parseFloat(precioInput) || 0
+      conIVA = n
       base = conIVA / (1 + iva / 100)
     }
     return {
@@ -78,8 +79,10 @@ export default function EditarProducto({ params }) {
           precio: data.precio || 0,
           impuesto: data.impuesto || 21
         })
-        // Inicializar el precio input con el precio base del producto
-        setPrecioInput(data.precio || 0)
+        const pb = data.precio
+        setPrecioInput(
+          pb === 0 || pb === null || pb === undefined ? '' : String(pb)
+        )
       } catch (err) {
         setError(err.message)
       } finally {
@@ -127,7 +130,12 @@ export default function EditarProducto({ params }) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          descripcion: formData.descripcion,
+          precio: formData.precio,
+          impuesto: formData.impuesto,
+        }),
       })
 
       if (!response.ok) {
@@ -177,7 +185,15 @@ export default function EditarProducto({ params }) {
       {/* Formulario para editar el producto */}
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
+          <div className="md:col-span-2">
+            <span className="block text-gray-900 font-medium mb-2">Código / referencia del producto</span>
+            <div className="w-full p-2 border rounded bg-gray-100 text-gray-900 font-mono text-sm">
+              {formData.codigo || '—'}
+            </div>
+            <p className="text-xs text-gray-600 mt-1">Asignado al crear el producto; no se puede modificar.</p>
+          </div>
+
+          <div className="md:col-span-2">
             <label className="block text-gray-900 font-medium mb-2" htmlFor="nombre">
               Nombre del Producto
             </label>
@@ -193,24 +209,9 @@ export default function EditarProducto({ params }) {
             />
           </div>
 
-          <div>
-            <label className="block text-gray-900 font-medium mb-2" htmlFor="codigo">
-              Código/Referencia
-            </label>
-            <input
-              id="codigo"
-              name="codigo"
-              type="text"
-              value={formData.codigo}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-              placeholder="Código interno (opcional)"
-            />
-          </div>
-
           <div className="md:col-span-2">
             <label className="block text-gray-900 font-medium mb-2" htmlFor="descripcion">
-              Descripción
+              Descripción <span className="text-gray-500 font-normal">(opcional)</span>
             </label>
             <textarea
               id="descripcion"
@@ -219,7 +220,7 @@ export default function EditarProducto({ params }) {
               onChange={handleChange}
               rows="3"
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-              placeholder="Descripción detallada del producto o servicio"
+              placeholder="Detalle adicional del producto o servicio"
             ></textarea>
           </div>
 
@@ -246,14 +247,13 @@ export default function EditarProducto({ params }) {
             <input
               id="precio"
               name="precio"
-              type="number"
-              step="0.0001"
-              min="0"
+              type="text"
+              inputMode="decimal"
               value={precioInput}
               onChange={handleChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-              required
               placeholder="0.00"
+              autoComplete="off"
             />
           </div>
           

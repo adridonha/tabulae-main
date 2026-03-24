@@ -168,7 +168,7 @@ export const generateInvoicePDF = async (factura, empresa) => {
     });
 
     headerY -= 18;
-    
+
     // Dirección completa
     const direccion = empresa.direccion || "";
     if (direccion) {
@@ -213,6 +213,21 @@ export const generateInvoicePDF = async (factura, empresa) => {
   headerY = pageHeight - margin - 25;
 
   if (empresa) {
+    const propietario = (empresa.propietario || "").trim();
+    if (propietario) {
+      const propietarioText =
+        propietario.length > 35
+          ? truncateText(propietario, 195, regularFont, 10)
+          : propietario;
+      page.drawText(propietarioText, {
+        x: fiscalInfoX,
+        y: headerY,
+        size: 10,
+        font: regularFont,
+      });
+      headerY -= 14;
+    }
+
     // NIF/CIF
     const nif = empresa.nif || "";
     if (nif) {

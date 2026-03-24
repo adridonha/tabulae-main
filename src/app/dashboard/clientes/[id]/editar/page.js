@@ -4,6 +4,12 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { use } from 'react'
+import { useCodigoPostalAutofill } from '@/hooks/useCodigoPostalAutofill'
+
+function isValidEmail(email) {
+  if (!email) return true
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
 
 // Componente para editar un cliente existente
 export default function EditarCliente({ params }) {
@@ -28,6 +34,8 @@ export default function EditarCliente({ params }) {
   const [loading, setLoading] = useState(true)
   // Estado para mostrar errores
   const [error, setError] = useState(null)
+
+  const cpLookupLoading = useCodigoPostalAutofill(formData.codigoPostal, setFormData)
 
   // Cargar los datos del cliente al montar el componente
   useEffect(() => {
@@ -72,7 +80,11 @@ export default function EditarCliente({ params }) {
     try {
       setSubmitting(true)
       setError(null)
-      
+
+      if (formData.email && !isValidEmail(formData.email)) {
+        throw new Error('El formato del correo electrónico no es válido')
+      }
+
       const response = await fetch(`/api/clientes/${id}`, {
         method: 'PUT',
         headers: {
@@ -181,11 +193,18 @@ export default function EditarCliente({ params }) {
               id="codigoPostal"
               name="codigoPostal"
               type="text"
+              inputMode="numeric"
+              maxLength={8}
               value={formData.codigoPostal}
               onChange={handleChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900"
-              placeholder="Código postal"
+              placeholder="Ej. 28013"
+              aria-busy={cpLookupLoading}
             />
+            <p className="text-xs text-gray-600 mt-1">
+              Con 5 dígitos se rellenan localidad y provincia automáticamente.
+              {cpLookupLoading ? ' Buscando…' : ''}
+            </p>
           </div>
 
           <div>
@@ -229,7 +248,6 @@ export default function EditarCliente({ params }) {
               value={formData.email}
               onChange={handleChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900"
-              required
               placeholder="correo@ejemplo.com"
             />
           </div>
@@ -245,7 +263,6 @@ export default function EditarCliente({ params }) {
               value={formData.telefono}
               onChange={handleChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-green-500 bg-white text-gray-900"
-              required
               placeholder="Número de teléfono"
             />
           </div>
