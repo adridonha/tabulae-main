@@ -2,7 +2,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import dbConnect from './db';
 import Usuario from '../models/Usuario';
 
-// Opciones de configuración para next-auth
+// Opciones de configuración para next-auth con el proveedor de credenciales personalizado
 export const authOptions = {
   providers: [
     CredentialsProvider({
