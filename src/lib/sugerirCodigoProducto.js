@@ -22,7 +22,7 @@ function sufijoUnico() {
 }
 
 /**
- * Referencia legible: slug del nombre + tipo IVA + sufijo aleatorio (máx. 50 chars).
+ * Referencia legible: slug del nombre + tipo IVA + sufijo aleatorio.
  */
 export function sugerirCodigoProducto(nombre, impuestoPct = 21) {
   const slug = slugify(nombre);
